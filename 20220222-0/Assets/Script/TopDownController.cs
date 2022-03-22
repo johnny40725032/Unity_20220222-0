@@ -21,6 +21,8 @@ namespace KID
         private string parameterDead = "開關-死亡";
         private Animator ani;
         private Rigidbody2D rig;
+        private float h;
+        private float v;
 
         #endregion
 
@@ -40,6 +42,8 @@ namespace KID
         private void Update()
         {
             GetIuput();
+            Move();
+            Rotate();
         }
 
         #endregion
@@ -54,9 +58,32 @@ namespace KID
             //Horizontal 水平軸向
             //左:方向左鍵與A-傳回-1
             //右:方向右鍵與D-傳回+1
-            float h = Input.GetAxis("Horizontal");
-            print("水平軸向值:" + h);
+            h = Input.GetAxis("Horizontal");
+            v = Input.GetAxis("Vertical");
+            //print("水平軸向值:" + h);
         }
+
+        private void Move()
+        {
+            //使用非靜態資料 non-static
+            //語法：欄位名稱.非靜態屬性名稱
+            rig.velocity = new Vector2(h, v) * speed; //鋼體.加速度=二維向量*速度
+            //水平不等於0 或者 垂直也不等於0
+            ani.SetBool(parameterRun, h != 0 || v !=0); //動畫控制器.設定布林值(參數.布林值)=h不等於0，當水平軸向不等於零，就觸發跑步動畫
+
+        }
+
+
+        private void Rotate()
+        {
+            //往右移動 Y=0
+            //往左移動 Y=180
+            //三源運算子
+            //語法：布林值 ? 布林值為true：布林值為false
+            // h>0 ? 0:180=若水平值 大於等於 零 值為0，否則 值為180
+            transform.eulerAngles = new Vector3(0, h >= 0 ? 0:180,0);
+        }
+
         #endregion
     }
 }
